@@ -222,4 +222,26 @@ services:
       - nsqlookupd
     ports:
       - "4171"
+  prom:
+    image: quay.io/prometheus/prometheus:v2.2.1
+    volumes:
+     - ./monitor/prometheus.yml:/etc/prometheus/prometheus.yml
+    command: "--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus"
+    ports:
+     - 9090:9090
+    depends_on:
+     - exporter
+  exporter:
+    image: prom/node-exporter:latest
+    ports:
+     - "9100:9100"
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    env_file:
+      - 'env.grafana'
+    depends_on:
+      - prom
 networks: {stack: {}}
