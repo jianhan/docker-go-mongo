@@ -248,9 +248,19 @@ services:
     hostname: rabbit
     image: rabbitmq:latest
     environment:
-        - RABBITMQ_DEFAULT_USER=admin
-        - RABBITMQ_DEFAULT_PASS=mypass
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=mypass
     ports:
-        - "5673:5672"
+      - "5673:5672"
+  etcd:
+    image: quay.io/coreos/etcd:v3.3.2
+    restart: always
+    environment:
+      ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:4001,http://0.0.0.0:2379
+      ETCD_ADVERTISE_CLIENT_URLS: http://localhost:4001,http://localhost:2379
+    ports:
+      - "4001:4001"
+      - "2379:2379"
+
 networks: {stack: {}}
 
